@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import { Item, HeaderButtons } from "react-navigation-header-buttons";
+import { AppHeaderIcon } from "../components/AppHeaderIcon";
 import { DATA } from "../data";
 import { THEME } from "../theme";
 
@@ -15,6 +17,10 @@ export const PostScreen = ({ navigation }) => {
   const postId = navigation.getParam("postId");
 
   const post = DATA.find((p) => p.id === postId);
+
+  // useEffect(() => {
+  //   navigation.setParams({ booked: post.booked });
+  // }, []);
 
   const removeHandler = () => {
     Alert.alert(
@@ -25,7 +31,7 @@ export const PostScreen = ({ navigation }) => {
           text: "Cancel",
           style: "cancel",
         },
-        { text: "Remove", style: 'destructive', onPress: () => {} },
+        { text: "Remove", style: "destructive", onPress: () => {} },
       ],
       { cancelable: false }
     );
@@ -48,8 +54,19 @@ export const PostScreen = ({ navigation }) => {
 
 PostScreen.navigationOptions = ({ navigation }) => {
   const date = navigation.getParam("date");
+  const booked = navigation.getParam('booked');
+  const iconName = booked ? "ios-star" : 'ios-star-outline';
   return {
     headerTitle: "Post date " + new Date(date).toLocaleDateString(),
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+        <Item
+          title='Take photo'
+          iconName={iconName}
+          onPress={() => console.log("Press photo")}
+        />
+      </HeaderButtons>
+    ),
   };
 };
 
