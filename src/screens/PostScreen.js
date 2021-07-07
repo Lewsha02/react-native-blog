@@ -9,6 +9,10 @@ export const PostScreen = ({}) => {
   );
 };
 
+PostScreen.navigationOptions = {
+  headerTitle: "Post #42",
+};
+
 const styles = StyleSheet.create({
   center: {
     flex: 1,
