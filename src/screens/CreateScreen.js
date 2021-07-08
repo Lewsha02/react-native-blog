@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -15,23 +15,26 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { AppHeaderIcon } from "../components/AppHeaderIcon";
 import { THEME } from "../theme";
 import { addPost } from "../store/actions/post";
+import { PhotoPicker } from "../components/PhotoPicker";
 
 export const CreateScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
-
-  const img =
-    "https://images.unsplash.com/photo-1556610961-2fecc5927173?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2120&q=80";
+  const imgRef = useRef();
 
   const saveHandler = () => {
     const post = {
       date: new Date().toJSON(),
       text: text,
-      img: img,
+      img: imgRef.current,
       booked: false,
     };
     dispatch(addPost(post));
     navigation.navigate("Main");
+  };
+
+  const photoPickHandler = (uri) => {
+    imgRef.current = uri;
   };
 
   return (
@@ -46,16 +49,12 @@ export const CreateScreen = ({ navigation }) => {
             onChangeText={setText}
             multiline
           />
-          <Image
-            style={{ width: "100%", height: 200, marginBottom: 10 }}
-            source={{
-              uri: img,
-            }}
-          />
+          <PhotoPicker onPick={photoPickHandler} />
           <Button
             title='Create post'
             color={THEME.MAIN_COLOR}
             onPress={saveHandler}
+            disabled={!text}
           />
         </View>
       </TouchableWithoutFeedback>
